@@ -9,16 +9,16 @@ public class User {
     private String email;
     private String password;
     private LocalDate dateOfBirth;
-    private String adress;
+    private String address;
 
-    public User(Long id, String firstName, String lastName, String email, String password, LocalDate dateOfBirth, String adress) {
+    public User(Long id, String firstName, String lastName, String email, String password, LocalDate dateOfBirth, String address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
-        this.adress = adress;
+        this.address = address;
     }
 
     public Long getId() {
@@ -69,12 +69,12 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String adress) {
+        this.address = adress;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
-                ", adress='" + adress + '\'' +
+                ", address='" + address + '\'' +
                 '}';
     }
 }
