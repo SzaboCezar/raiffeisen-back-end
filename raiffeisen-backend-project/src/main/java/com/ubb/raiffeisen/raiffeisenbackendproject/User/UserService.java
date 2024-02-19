@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 @Service
 public class UserService {
@@ -22,6 +24,11 @@ public class UserService {
 
      public List<User> getListOfUsers(){
          return userList;
+     }
+
+     public User findById(Long id){
+         Predicate<? super User> predicate = user -> Objects.equals(user.getId(), id);
+         return userList.stream().filter(predicate).findFirst().orElse(null);
      }
 
 }

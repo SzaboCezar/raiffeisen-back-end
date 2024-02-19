@@ -8,6 +8,7 @@ public class RaiffeisenBackendProjectApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(RaiffeisenBackendProjectApplication.class, args);
+		System.out.println("Server started on port 8080...");
 	}
 
 }
