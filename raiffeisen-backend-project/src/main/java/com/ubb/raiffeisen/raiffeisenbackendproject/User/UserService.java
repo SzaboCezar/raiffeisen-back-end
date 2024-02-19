@@ -36,4 +36,9 @@ public class UserService {
          userList.add(user);
      }
 
+     public void deleteUserById(Long id){
+         Predicate<? super User> predicate = user -> user.getId().equals(id);
+         userList.removeIf(predicate);
+     }
+
 }

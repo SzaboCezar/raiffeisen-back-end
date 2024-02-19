@@ -1,9 +1,6 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +26,11 @@ public class UserController {
     @PostMapping(path = "/user")
     private void createUser(@RequestBody User user){
         userService.saveUser(user);
+    }
+
+    @PostMapping(path = "/user/{id}")
+    private void deleteUser(@PathVariable Long id){
+        userService.deleteUserById(id);
     }
 
 }
