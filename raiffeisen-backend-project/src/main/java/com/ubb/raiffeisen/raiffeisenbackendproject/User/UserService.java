@@ -31,4 +31,9 @@ public class UserService {
          return userList.stream().filter(predicate).findFirst().orElse(null);
      }
 
+     public void saveUser(User user){
+         user.setId(counter++);
+         userList.add(user);
+     }
+
 }
