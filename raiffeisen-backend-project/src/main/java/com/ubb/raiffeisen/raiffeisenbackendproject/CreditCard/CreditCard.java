@@ -13,13 +13,14 @@ public class CreditCard {
     private Integer points;
     private User user;
 
-    public CreditCard(Long id, String cardNumber, LocalDate expirationDate, String CVV, Long amount, Integer points) {
+    public CreditCard(Long id, String cardNumber, LocalDate expirationDate, String CVV, Long amount, Integer points, User user) {
         this.id = id;
         this.cardNumber = cardNumber;
         this.expirationDate = expirationDate;
         this.CVV = CVV;
         this.amount = amount;
         this.points = points;
+        this.user = user;
     }
 
     public Long getId() {
