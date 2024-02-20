@@ -51,4 +51,14 @@ public class CreditCardService {
         return creditCardList.stream().filter(predicate).findFirst().orElse(null);
     }
 
+    public void saveCreditCard(CreditCard creditCard){
+        creditCard.setId(counter++);
+        creditCardList.add(creditCard);
+    }
+
+    public void deleteById(Long id){
+        Predicate<? super CreditCard> predicate = creditId -> creditId.getId().equals(id);
+        creditCardList.removeIf(predicate);
+    }
+
 }
