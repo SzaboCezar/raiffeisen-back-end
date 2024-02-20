@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-@Service
+//@Service
 public class UserService {
 
     private List<User> userList = new ArrayList<>();
