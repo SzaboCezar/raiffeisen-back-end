@@ -46,4 +46,9 @@ public class CreditCardService {
         return creditCardList;
     }
 
+    public CreditCard findById(Long id){
+        Predicate<? super CreditCard> predicate = creditId -> creditId.getId().equals(id);
+        return creditCardList.stream().filter(predicate).findFirst().orElse(null);
+    }
+
 }
