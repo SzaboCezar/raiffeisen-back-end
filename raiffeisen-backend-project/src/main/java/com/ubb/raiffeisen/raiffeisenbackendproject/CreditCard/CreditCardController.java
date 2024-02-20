@@ -21,7 +21,7 @@ public class CreditCardController {
     @GetMapping(path = "/credit-card/{cardId}")
     public CreditCard findById(@PathVariable Long cardId){
         CreditCard creditCard = cardService.findById(cardId);
-        if(creditCard == null) throw new CreditNotFoundException("Credit Card with id: " + cardId + " does not exist!");
+        if(creditCard == null) throw new CardNotFoundException("Credit Card with id: " + cardId + " does not exist!");
         return creditCard;
     }
 
