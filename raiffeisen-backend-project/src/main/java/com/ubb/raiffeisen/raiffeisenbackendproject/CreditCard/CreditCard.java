@@ -1,16 +1,24 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard;
 
 import com.ubb.raiffeisen.raiffeisenbackendproject.User.User;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 import java.time.LocalDate;
 
+@Entity
 public class CreditCard {
+    @Id
+    @GeneratedValue
     private Long id;
     private String cardNumber;
     private LocalDate expirationDate;
     private String CVV;
     private Long amount;
     private Integer points;
+    @OneToOne
     private User user;
 
     public CreditCard(Long id, String cardNumber, LocalDate expirationDate, String CVV, Long amount, Integer points, User user) {
@@ -21,6 +29,10 @@ public class CreditCard {
         this.amount = amount;
         this.points = points;
         this.user = user;
+    }
+
+    public CreditCard() {
+
     }
 
     public Long getId() {

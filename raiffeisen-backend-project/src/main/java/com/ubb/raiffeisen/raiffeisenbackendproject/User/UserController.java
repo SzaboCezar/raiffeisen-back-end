@@ -8,14 +8,19 @@ import java.util.List;
  */
 @RestController
 public class UserController {
+
     private UserService userService;
+
+    private UserJpaRepository userJpaRepository;
+
 
     /***
      * Constructor for UserController.
      * @param userService The UserService dependency used for user-related operations.
      */
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserJpaRepository userJpaRepository) {
         this.userService = userService;
+        this.userJpaRepository = userJpaRepository;
     }
 
     /***
@@ -24,7 +29,7 @@ public class UserController {
      */
     @GetMapping(path = "/users")
     private List<User> getUsers(){
-        return userService.getListOfUsers();
+        return userJpaRepository.findAll();
     }
 
     /***

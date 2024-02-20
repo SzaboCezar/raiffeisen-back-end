@@ -1,8 +1,17 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.User;
 
+import com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard.CreditCard;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+
 import java.time.LocalDate;
 
+@Entity(name = "user_details")
 public class User {
+    @Id
+    @GeneratedValue
     private Long id;
     private String firstName;
     private String lastName;
@@ -10,6 +19,8 @@ public class User {
     private String password;
     private LocalDate dateOfBirth;
     private String address;
+    @OneToOne(mappedBy = "user")
+    private CreditCard creditCard;
 
     public User(Long id, String firstName, String lastName, String email, String password, LocalDate dateOfBirth, String address) {
         this.id = id;
@@ -19,6 +30,10 @@ public class User {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
+    }
+
+    public User() {
+
     }
 
     public Long getId() {
