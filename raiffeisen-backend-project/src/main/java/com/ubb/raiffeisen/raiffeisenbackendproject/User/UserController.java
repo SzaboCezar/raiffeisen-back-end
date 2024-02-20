@@ -9,12 +9,15 @@ import java.util.Optional;
  */
 @RestController
 public class UserController {
+
+    /**
+     * The repository for user-related database operations.
+     */
     private UserJpaRepository userJpaRepository;
 
-
-    /***
+    /**
      * Constructor for UserController.
-     * @param userJpaRepository The UserService dependency used for user-related operations.
+     * @param userJpaRepository The UserJpaRepository dependency used for user-related operations.
      */
     public UserController(UserJpaRepository userJpaRepository) {
         this.userJpaRepository = userJpaRepository;
@@ -59,4 +62,7 @@ public class UserController {
     private void deleteUser(@PathVariable Long id){
         userJpaRepository.deleteById(id);
     }
+
+    // TODO -> Update User
+
 }
