@@ -1,6 +1,5 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.User;
 import com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard.CreditCard;
-import com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard.CreditCardJpaRepository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +64,13 @@ public class UserController {
         return userJpaRepository.save(user);
     }
 
+    @GetMapping(path = "/user-email/{email}")
+    private Optional<User> getUserByEmail(@PathVariable String email){
+        Optional<User> checkUser = Optional.ofNullable(userJpaRepository.findByEmail(email));
+        if(checkUser.isEmpty()) throw new UserNotFoundException("User with email: " + email + " does not exist!");
+        return checkUser;
+    }
+
     /***
      * Deletes a user by their unique identifier.
      * @param id The unique identifier of the user to be deleted.
@@ -74,6 +80,30 @@ public class UserController {
         userJpaRepository.deleteById(id);
     }
 
-    // TODO -> Update User
+    /**
+     * Updates the information of an existing user based on the provided email address.
+     *
+     * @param email The email address of the user to be updated.
+     * @param user The updated user object containing the new information.
+     * @return The updated user object.
+     * @throws UserNotFoundException If the user with the specified email does not exist.
+     */
+    @PutMapping(path = "/user/{email}")
+    private User updateUser(@PathVariable String email, @RequestBody User user){
+        Optional<User> checkUser = Optional.ofNullable(userJpaRepository.findByEmail(email));
+        if (checkUser.isEmpty()) {
+            throw new UserNotFoundException("User with email: " + email + " does not exist!");
+        }else {
+            User updatedUser = checkUser.get();
+            updatedUser.setFirstName(user.getFirstName());
+            updatedUser.setLastName(user.getLastName());
+            updatedUser.setEmail(user.getEmail());
+            updatedUser.setPassword(user.getPassword());
+            updatedUser.setDateOfBirth(user.getDateOfBirth());
+            updatedUser.setAddress(user.getAddress());
+            userJpaRepository.save(updatedUser);
+            return updatedUser;
+        }
+    }
 
 }
