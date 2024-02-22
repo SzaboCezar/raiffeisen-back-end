@@ -1,18 +1,15 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard;
 
 import com.ubb.raiffeisen.raiffeisenbackendproject.User.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-@Entity
+@Entity(name = "credit_cards")
 public class CreditCard {
     @Id
     @GeneratedValue
-    private Long id;
+    private Long creditCardID;
     private String cardNumber;
     private LocalDate expirationDate;
     private String CVV;
@@ -21,26 +18,25 @@ public class CreditCard {
     @OneToOne
     private User user;
 
-    public CreditCard(Long id, String cardNumber, LocalDate expirationDate, String CVV, Long amount, Integer points, User user) {
-        this.id = id;
+    public CreditCard(Long creditCardID, String cardNumber, LocalDate expirationDate, String CVV, Long amount, Integer points) {
+        this.creditCardID = creditCardID;
         this.cardNumber = cardNumber;
         this.expirationDate = expirationDate;
         this.CVV = CVV;
         this.amount = amount;
         this.points = points;
-        this.user = user;
     }
 
     public CreditCard() {
 
     }
 
-    public Long getId() {
-        return id;
+    public Long getCreditCardID() {
+        return creditCardID;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCreditCardID(Long creditCardID) {
+        this.creditCardID = creditCardID;
     }
 
     public String getCardNumber() {
@@ -94,13 +90,12 @@ public class CreditCard {
     @Override
     public String toString() {
         return "CreditCard{" +
-                "id=" + id +
+                "creditCardID=" + creditCardID +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", expirationDate=" + expirationDate +
                 ", CVV='" + CVV + '\'' +
                 ", amount=" + amount +
                 ", points=" + points +
-                ", user=" + user +
                 '}';
     }
 }

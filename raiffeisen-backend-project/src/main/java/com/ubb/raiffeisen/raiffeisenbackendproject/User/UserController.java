@@ -1,4 +1,6 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.User;
+import com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard.CreditCard;
+import com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard.CreditCardJpaRepository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -45,13 +47,22 @@ public class UserController {
         return user;
     }
 
+    @GetMapping(path = "/user/{user_id}/credit-card")
+    private CreditCard getCreditCardForUser(@PathVariable Long user_id){
+        Optional<User> findUser = userJpaRepository.findById(user_id);
+
+        if(findUser.isEmpty()) throw new UserNotFoundException("User with id: " + user_id + " does not exist!");
+
+        return findUser.get().getCreditCard();
+    }
+
     /***
      * Creates a new user.
      * @param user The user object to be created.
      */
     @PostMapping(path = "/user")
-    private void createUser(@RequestBody User user){
-        userJpaRepository.save(user);
+    private User createUser(@RequestBody User user){
+        return userJpaRepository.save(user);
     }
 
     /***
