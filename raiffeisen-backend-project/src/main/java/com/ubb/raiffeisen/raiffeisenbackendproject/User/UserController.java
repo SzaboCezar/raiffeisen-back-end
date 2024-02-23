@@ -66,7 +66,7 @@ public class UserController {
 
     @GetMapping(path = "/user-email/{email}")
     private Optional<User> getUserByEmail(@PathVariable String email){
-        Optional<User> checkUser = Optional.ofNullable(userJpaRepository.findByEmail(email));
+        Optional<User> checkUser = userJpaRepository.findByEmail(email);
         if(checkUser.isEmpty()) throw new UserNotFoundException("User with email: " + email + " does not exist!");
         return checkUser;
     }
@@ -90,7 +90,7 @@ public class UserController {
      */
     @PutMapping(path = "/user/{email}")
     private User updateUser(@PathVariable String email, @RequestBody User user){
-        Optional<User> checkUser = Optional.ofNullable(userJpaRepository.findByEmail(email));
+        Optional<User> checkUser = userJpaRepository.findByEmail(email);
         if (checkUser.isEmpty()) {
             throw new UserNotFoundException("User with email: " + email + " does not exist!");
         }else {
