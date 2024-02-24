@@ -14,6 +14,7 @@ import java.util.Optional;
  * It provides endpoints for retrieving, creating, and deleting user information.
  */
 @RestController
+@RequestMapping("api/user")
 public class UserController {
 
     /**
@@ -84,7 +85,7 @@ public class UserController {
      * Deletes a user by their unique identifier.
      * @param id The unique identifier of the user to be deleted.
      */
-    @DeleteMapping(path = "/user/{id}")
+    @DeleteMapping(path = "/delete-user/{id}")
     private void deleteUser(@PathVariable Long id){
         userJpaRepository.deleteById(id);
     }
@@ -97,7 +98,7 @@ public class UserController {
      * @return The updated user object.
      * @throws UserNotFoundException If the user with the specified email does not exist.
      */
-    @PutMapping(path = "/user/{email}")
+    @PutMapping(path = "/user-update/{email}")
     private User updateUser(@PathVariable String email, @RequestBody User user){
         Optional<User> checkUser = userJpaRepository.findByEmail(email);
         if (checkUser.isEmpty()) {
