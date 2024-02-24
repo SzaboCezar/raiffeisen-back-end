@@ -1,5 +1,10 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.User;
+import com.ubb.raiffeisen.raiffeisenbackendproject.Auth.AuthenticationRequest;
+import com.ubb.raiffeisen.raiffeisenbackendproject.Auth.AuthenticationResponse;
+import com.ubb.raiffeisen.raiffeisenbackendproject.Auth.AuthenticationService;
+import com.ubb.raiffeisen.raiffeisenbackendproject.Auth.RegisterRequest;
 import com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard.CreditCard;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -16,12 +21,16 @@ public class UserController {
      */
     private UserJpaRepository userJpaRepository;
 
+    private final AuthenticationService service;
+
+
     /**
      * Constructor for UserController.
      * @param userJpaRepository The UserJpaRepository dependency used for user-related operations.
      */
-    public UserController(UserJpaRepository userJpaRepository) {
+    public UserController(UserJpaRepository userJpaRepository, AuthenticationService service) {
         this.userJpaRepository = userJpaRepository;
+        this.service = service;
     }
 
     /***
@@ -99,11 +108,22 @@ public class UserController {
             updatedUser.setLastName(user.getLastName());
             updatedUser.setEmail(user.getEmail());
             updatedUser.setPassword(user.getPassword());
+            updatedUser.setPhoneNumber(user.getPhoneNumber());
             updatedUser.setDateOfBirth(user.getDateOfBirth());
             updatedUser.setAddress(user.getAddress());
             userJpaRepository.save(updatedUser);
             return updatedUser;
         }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
+        return ResponseEntity.ok(service.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
+        return ResponseEntity.ok(service.authenticate(request));
     }
 
 }
