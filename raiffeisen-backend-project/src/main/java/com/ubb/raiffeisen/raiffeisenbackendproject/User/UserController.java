@@ -50,10 +50,10 @@ public class UserController {
      * @throws UserNotFoundException Thrown if the user with the provided ID does not exist.
      */
     @GetMapping(path = "/user/{id}")
-    private Optional<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<Optional<User>> getUserById(@PathVariable Long id) {
         Optional<User> user = userJpaRepository.findById(id);
         if(user.isEmpty()) throw new UserNotFoundException("User with id: " + id + " does not exist!");
-        return user;
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping(path = "/user/{user_id}/credit-card")
