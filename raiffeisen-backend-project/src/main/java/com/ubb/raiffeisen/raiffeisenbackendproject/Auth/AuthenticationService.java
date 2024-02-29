@@ -19,6 +19,13 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+
+    /**
+     * Registers a new user.
+     *
+     * @param request The register request containing user information.
+     * @return An AuthenticationResponse object containing the JWT token.
+     */
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
                 .firstName(request.getFirstName())
@@ -39,6 +46,13 @@ public class AuthenticationService {
                 .build();
     }
 
+
+    /**
+     * Authenticates a user.
+     *
+     * @param request The authentication request containing user credentials.
+     * @return An AuthenticationResponse object containing the JWT token.
+     */
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 

@@ -22,6 +22,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+
+    /**
+     * Performs the filtering logic for JWT authentication.
+     *
+     * @param request     The HttpServletRequest object.
+     * @param response    The HttpServletResponse object.
+     * @param filterChain The FilterChain object.
+     * @throws ServletException if an error occurs during the filter execution.
+     * @throws IOException      if an I/O error occurs during the filter execution.
+     */
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,

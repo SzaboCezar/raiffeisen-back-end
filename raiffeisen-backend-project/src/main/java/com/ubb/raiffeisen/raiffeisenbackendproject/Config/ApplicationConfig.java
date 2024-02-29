@@ -1,7 +1,6 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.Config;
 
 import com.ubb.raiffeisen.raiffeisenbackendproject.User.UserJpaRepository;
-import com.ubb.raiffeisen.raiffeisenbackendproject.User.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,24 +8,37 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+
+/**
+ * Configuration class for application settings and beans.
+ */
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
     private final UserJpaRepository userJpaRepository;
 
+    /**
+     * Creates a UserDetailsService bean to retrieve user details by username.
+     *
+     * @return A UserDetailsService instance.
+     */
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> userJpaRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    /**
+     * Creates an AuthenticationProvider bean for authentication.
+     *
+     * @return An AuthenticationProvider instance.
+     */
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -35,11 +47,23 @@ public class ApplicationConfig {
         return authProvider;
     }
 
+    /**
+     * Creates an AuthenticationManager bean.
+     *
+     * @param config The AuthenticationConfiguration.
+     * @return An AuthenticationManager instance.
+     * @throws Exception if an error occurs while creating the AuthenticationManager.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
+    /**
+     * Creates a PasswordEncoder bean for encoding passwords.
+     *
+     * @return A PasswordEncoder instance.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

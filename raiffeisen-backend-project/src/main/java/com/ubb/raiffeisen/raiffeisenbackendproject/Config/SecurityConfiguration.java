@@ -3,7 +3,6 @@ package com.ubb.raiffeisen.raiffeisenbackendproject.Config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -26,17 +25,15 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
+    /**
+     * Configures the security filter chain.
+     *
+     * @param http The HttpSecurity object used to configure security.
+     * @return The configured SecurityFilterChain.
+     * @throws Exception If an error occurs during configuration.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-//        httpSecurity.authorizeHttpRequests(
-//                auth -> auth.anyRequest().authenticated()
-//        );
-//
-//        httpSecurity.httpBasic(Customizer.withDefaults());
-//        httpSecurity.csrf(csrf -> csrf.disable());
-//        httpSecurity.cors(Customizer.withDefaults());
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) ->
