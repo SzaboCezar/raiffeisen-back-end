@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 public class TransactionController {
@@ -48,22 +49,37 @@ public class TransactionController {
     }
 
     @GetMapping(path = "/transaction-sortH/{card_id}")
-    public ResponseEntity<List<Transaction>> filterHighestTransaction(@PathVariable Long card_id){
-        Optional<CreditCard> checkCard = cardJpaRepository.findById(card_id);
-        if (checkCard.isEmpty()) throw new CardNotFoundException("Card with id: " + card_id + " does not exist!");
+    public ResponseEntity<List<Transaction>> filterHighest(@PathVariable Long card_id) {
+        Optional<CreditCard> optionalCreditCard = cardJpaRepository.findById(card_id);
+        if (optionalCreditCard.isEmpty()) {
+            throw new CardNotFoundException("Card with id: " + card_id + " does not exist!");
+        }
 
-        List<Transaction> sortHighest = transactionRepository.findAll();
-       return ResponseEntity.ok(sortHighest.stream().sorted(Comparator.comparing(Transaction::getAmount).reversed()).toList());
+        CreditCard creditCard = optionalCreditCard.get();
+
+        List<Transaction> sortedTransactions = transactionRepository.findAllByCreditCard(creditCard).stream()
+                .sorted(Comparator.comparing(Transaction::getAmount).reversed())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(sortedTransactions);
     }
 
     @GetMapping(path = "/transaction-sortL/{card_id}")
-    public ResponseEntity<List<Transaction>> filterLowestTransaction(@PathVariable Long card_id){
-        Optional<CreditCard> checkCard = cardJpaRepository.findById(card_id);
-        if (checkCard.isEmpty()) throw new CardNotFoundException("Card with id: " + card_id + " does not exist!");
+    public ResponseEntity<List<Transaction>> filterLowestTransaction(@PathVariable Long card_id) {
+        Optional<CreditCard> optionalCreditCard = cardJpaRepository.findById(card_id);
+        if (optionalCreditCard.isEmpty()) {
+            throw new CardNotFoundException("Card with id: " + card_id + " does not exist!");
+        }
 
-        List<Transaction> sortHighest = transactionRepository.findAll();
-        return ResponseEntity.ok(sortHighest.stream().sorted(Comparator.comparing(Transaction::getAmount)).toList());
+        CreditCard creditCard = optionalCreditCard.get();
+
+        List<Transaction> sortedTransactions = transactionRepository.findAllByCreditCard(creditCard).stream()
+                .sorted(Comparator.comparing(Transaction::getAmount))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(sortedTransactions);
     }
+
 
 
 }
