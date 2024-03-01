@@ -6,6 +6,7 @@ import com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard.CreditCardJpaRepos
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,25 @@ public class TransactionController {
         if (checkTransaction.isEmpty()) throw new TransactionNotFoundException("Transaction with id: " + transaction_id + " does not exist!");
 
         return ResponseEntity.ok(checkTransaction);
-
     }
+
+    @GetMapping(path = "/transaction-sortH/{card_id}")
+    public ResponseEntity<List<Transaction>> filterHighestTransaction(@PathVariable Long card_id){
+        Optional<CreditCard> checkCard = cardJpaRepository.findById(card_id);
+        if (checkCard.isEmpty()) throw new CardNotFoundException("Card with id: " + card_id + " does not exist!");
+
+        List<Transaction> sortHighest = transactionRepository.findAll();
+       return ResponseEntity.ok(sortHighest.stream().sorted(Comparator.comparing(Transaction::getAmount).reversed()).toList());
+    }
+
+    @GetMapping(path = "/transaction-sortL/{card_id}")
+    public ResponseEntity<List<Transaction>> filterLowestTransaction(@PathVariable Long card_id){
+        Optional<CreditCard> checkCard = cardJpaRepository.findById(card_id);
+        if (checkCard.isEmpty()) throw new CardNotFoundException("Card with id: " + card_id + " does not exist!");
+
+        List<Transaction> sortHighest = transactionRepository.findAll();
+        return ResponseEntity.ok(sortHighest.stream().sorted(Comparator.comparing(Transaction::getAmount)).toList());
+    }
+
+
 }
