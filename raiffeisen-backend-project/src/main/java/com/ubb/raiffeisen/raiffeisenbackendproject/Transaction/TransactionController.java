@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 @RestController
 public class TransactionController {
-
     private final TransactionJpaRepository transactionRepository;
     private final CreditCardJpaRepository cardJpaRepository;
 
@@ -28,16 +27,18 @@ public class TransactionController {
     }
 
     @PostMapping(path = "/make-transaction/{card_id}")
-    public Transaction makeTransaction(@RequestBody Transaction transaction, @PathVariable Long card_id, Transaction transaction1){
+    public Transaction makeTransaction(@RequestBody Transaction transaction, @PathVariable Long card_id){
         Optional<CreditCard> findCreditCard = cardJpaRepository.findById(card_id);
         if (findCreditCard.isEmpty()) throw new CardNotFoundException("Card with id: " + card_id + " does not exist!");
 
-        if(transaction1.getAmount() < transaction.getAmount()) throw new InsufficientFundsException("Insufficient Funds!");
-        transaction.setCreditCard(findCreditCard.get());
         CreditCard updateAmount = findCreditCard.get();
+        if(updateAmount.getAmount() < transaction.getAmount()) throw new InsufficientFundsException("Insufficient Funds!");
+        if(transaction.getCategories().equals(Categories.ECO)){
+            updateAmount.setPoints(updateAmount.getPoints() + 250);
+        }
+        transaction.setCreditCard(findCreditCard.get());
         updateAmount.setAmount((long) (updateAmount.getAmount() - transaction.getAmount()));
         cardJpaRepository.save(updateAmount);
-
         return transactionRepository.save(transaction);
     }
 
@@ -45,7 +46,6 @@ public class TransactionController {
     public ResponseEntity<Optional<Transaction>> showTransactionID(@PathVariable Long transaction_id){
         Optional<Transaction> checkTransaction = transactionRepository.findById(transaction_id);
         if (checkTransaction.isEmpty()) throw new TransactionNotFoundException("Transaction with id: " + transaction_id + " does not exist!");
-
         return ResponseEntity.ok(checkTransaction);
     }
 
@@ -57,7 +57,6 @@ public class TransactionController {
         }
 
         CreditCard creditCard = optionalCreditCard.get();
-
         List<Transaction> sortedTransactions = transactionRepository.findAllByCreditCard(creditCard).stream()
                 .sorted(Comparator.comparing(Transaction::getAmount).reversed())
                 .collect(Collectors.toList());
@@ -71,7 +70,6 @@ public class TransactionController {
         if (optionalCreditCard.isEmpty()) {
             throw new CardNotFoundException("Card with id: " + card_id + " does not exist!");
         }
-
         CreditCard creditCard = optionalCreditCard.get();
 
         List<Transaction> sortedTransactions = transactionRepository.findAllByCreditCard(creditCard).stream()
@@ -80,7 +78,4 @@ public class TransactionController {
 
         return ResponseEntity.ok(sortedTransactions);
     }
-
-
-
 }
