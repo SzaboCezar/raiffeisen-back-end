@@ -28,10 +28,11 @@ public class TransactionController {
     }
 
     @PostMapping(path = "/make-transaction/{card_id}")
-    public Transaction makeTransaction(@RequestBody Transaction transaction, @PathVariable Long card_id){
+    public Transaction makeTransaction(@RequestBody Transaction transaction, @PathVariable Long card_id, Transaction transaction1){
         Optional<CreditCard> findCreditCard = cardJpaRepository.findById(card_id);
         if (findCreditCard.isEmpty()) throw new CardNotFoundException("Card with id: " + card_id + " does not exist!");
 
+        if(transaction1.getAmount() < transaction.getAmount()) throw new InsufficientFundsException("Insufficient Funds!");
         transaction.setCreditCard(findCreditCard.get());
         CreditCard updateAmount = findCreditCard.get();
         updateAmount.setAmount((long) (updateAmount.getAmount() - transaction.getAmount()));
