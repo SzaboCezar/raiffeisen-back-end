@@ -11,7 +11,7 @@ COPY . .
 RUN gradle build
 
 # Folosim o imagine de bază Java 11 pentru a rula aplicația
-FROM openjdk:11-jre-slim
+FROM openjdk:19-jre-slim
 
 # Setăm directorul de lucru în interiorul containerului
 WORKDIR /app
