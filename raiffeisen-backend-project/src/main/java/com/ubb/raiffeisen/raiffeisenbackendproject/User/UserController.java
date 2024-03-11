@@ -14,26 +14,20 @@ import java.util.Optional;
  * It provides endpoints for retrieving, creating, and deleting user information.
  */
 @RestController
-@RequestMapping("api/user")
 public class UserController {
 
     /**
      * The repository for user-related database operations.
      */
     private UserJpaRepository userJpaRepository;
-
-    private final AuthenticationService service;
-
-
     /**
      * Constructor for UserController.
      * @param userJpaRepository The UserJpaRepository dependency used for user-related operations.
      */
-    public UserController(UserJpaRepository userJpaRepository, AuthenticationService service) {
+    public UserController(UserJpaRepository userJpaRepository) {
         this.userJpaRepository = userJpaRepository;
-        this.service = service;
-    }
 
+    }
     /***
      * Retrieves a list of all users.
      * @return List<User> A list of all users.
@@ -116,15 +110,4 @@ public class UserController {
             return updatedUser;
         }
     }
-
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
-        return ResponseEntity.ok(service.register(request));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        return ResponseEntity.ok(service.authenticate(request));
-    }
-
 }
