@@ -1,5 +1,5 @@
 # Folosim o imagine de bază cu Java 11 și Gradle instalat
-FROM gradle:jdk19 as builder
+FROM gradle:8.5 as builder
 
 # Setăm directorul de lucru în interiorul containerului
 WORKDIR /app
