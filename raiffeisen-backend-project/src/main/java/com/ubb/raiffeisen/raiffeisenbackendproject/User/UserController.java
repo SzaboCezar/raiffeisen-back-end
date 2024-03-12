@@ -1,8 +1,4 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.User;
-import com.ubb.raiffeisen.raiffeisenbackendproject.Auth.AuthenticationRequest;
-import com.ubb.raiffeisen.raiffeisenbackendproject.Auth.AuthenticationResponse;
-import com.ubb.raiffeisen.raiffeisenbackendproject.Auth.AuthenticationService;
-import com.ubb.raiffeisen.raiffeisenbackendproject.Auth.RegisterRequest;
 import com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard.CreditCard;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +15,7 @@ public class UserController {
     /**
      * The repository for user-related database operations.
      */
-    private UserJpaRepository userJpaRepository;
+    private final UserJpaRepository userJpaRepository;
     /**
      * Constructor for UserController.
      * @param userJpaRepository The UserJpaRepository dependency used for user-related operations.
