@@ -1,5 +1,6 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.HandleException;
 
+import com.ubb.raiffeisen.raiffeisenbackendproject.Auth.AuthFailedException;
 import com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard.CardNotFoundException;
 import com.ubb.raiffeisen.raiffeisenbackendproject.Transaction.InsufficientFundsException;
 import com.ubb.raiffeisen.raiffeisenbackendproject.Transaction.TransactionNotFoundException;
@@ -36,6 +37,12 @@ public class CustomExceptionHandler {
     public ResponseEntity<ErrorDetails> handleInsufficientFunds(InsufficientFundsException ex){
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthFailedException.class)
+    public ResponseEntity<ErrorDetails> handleAuthFailed(AuthFailedException ex){
+        ErrorDetails errorDetails = new ErrorDetails(ex.getMessage());
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
 
 
