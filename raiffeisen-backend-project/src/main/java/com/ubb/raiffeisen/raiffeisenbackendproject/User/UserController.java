@@ -16,13 +16,14 @@ public class UserController {
      * The repository for user-related database operations.
      */
     private final UserJpaRepository userJpaRepository;
+    private final UserService userService;
     /**
      * Constructor for UserController.
      * @param userJpaRepository The UserJpaRepository dependency used for user-related operations.
      */
-    public UserController(UserJpaRepository userJpaRepository) {
+    public UserController(UserJpaRepository userJpaRepository, UserService userService) {
         this.userJpaRepository = userJpaRepository;
-
+        this.userService = userService;
     }
     /***
      * Retrieves a list of all users.
@@ -30,7 +31,7 @@ public class UserController {
      */
     @GetMapping(path = "/users")
     private List<User> getUsers(){
-        return userJpaRepository.findAll();
+        return userService.getListOfUsers();
     }
 
     /***
@@ -41,32 +42,22 @@ public class UserController {
      */
     @GetMapping(path = "/user/{id}")
     public ResponseEntity<Optional<User>> getUserById(@PathVariable Long id) {
-        Optional<User> user = userJpaRepository.findById(id);
+        Optional<User> user = userService.findUserById(id);
         if(user.isEmpty()) throw new UserNotFoundException("User with id: " + id + " does not exist!");
         return ResponseEntity.ok(user);
     }
 
+
     @GetMapping(path = "/user/{user_id}/credit-card")
-    private CreditCard getCreditCardForUser(@PathVariable Long user_id){
-        Optional<User> findUser = userJpaRepository.findById(user_id);
-
-        if(findUser.isEmpty()) throw new UserNotFoundException("User with id: " + user_id + " does not exist!");
-
-        return findUser.get().getCreditCard();
-    }
-
-    /***
-     * Creates a new user.
-     * @param user The user object to be created.
-     */
-    @PostMapping(path = "/user")
-    private User createUser(@RequestBody User user){
-        return userJpaRepository.save(user);
+    private ResponseEntity<CreditCard> getCreditCardForUser(@PathVariable Long user_id){
+        Optional<User> findUser = userService.findUserById(user_id);
+        if (findUser.isEmpty()) throw new UserNotFoundException("User with id: " + user_id + " does not exist!");
+        return ResponseEntity.ok(findUser.get().getCreditCard());
     }
 
     @GetMapping(path = "/user-email/{email}")
     private Optional<User> getUserByEmail(@PathVariable String email){
-        Optional<User> checkUser = userJpaRepository.findByEmail(email);
+        Optional<User> checkUser = userService.findUserByEmail(email);
         if(checkUser.isEmpty()) throw new UserNotFoundException("User with email: " + email + " does not exist!");
         return checkUser;
     }
@@ -77,7 +68,7 @@ public class UserController {
      */
     @DeleteMapping(path = "/delete-user/{id}")
     private void deleteUser(@PathVariable Long id){
-        userJpaRepository.deleteById(id);
+        userService.deleteUserById(id);
     }
 
     /**
@@ -90,20 +81,10 @@ public class UserController {
      */
     @PutMapping(path = "/user-update/{email}")
     private User updateUser(@PathVariable String email, @RequestBody User user){
-        Optional<User> checkUser = userJpaRepository.findByEmail(email);
+        Optional<User> checkUser = userService.findUserByEmail(email);
         if (checkUser.isEmpty()) {
             throw new UserNotFoundException("User with email: " + email + " does not exist!");
-        }else {
-            User updatedUser = checkUser.get();
-            updatedUser.setFirstName(user.getFirstName());
-            updatedUser.setLastName(user.getLastName());
-            updatedUser.setEmail(user.getEmail());
-            updatedUser.setPassword(user.getPassword());
-            updatedUser.setPhoneNumber(user.getPhoneNumber());
-            updatedUser.setDateOfBirth(user.getDateOfBirth());
-            updatedUser.setAddress(user.getAddress());
-            userJpaRepository.save(updatedUser);
-            return updatedUser;
         }
+        return userService.updateUser(user, checkUser.get());
     }
 }
