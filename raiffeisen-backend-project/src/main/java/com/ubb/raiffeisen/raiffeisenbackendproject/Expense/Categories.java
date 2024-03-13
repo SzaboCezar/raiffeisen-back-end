@@ -1,4 +1,4 @@
-package com.ubb.raiffeisen.raiffeisenbackendproject.Transaction;
+package com.ubb.raiffeisen.raiffeisenbackendproject.Expense;
 
 public enum Categories {
     GROCERIES,
