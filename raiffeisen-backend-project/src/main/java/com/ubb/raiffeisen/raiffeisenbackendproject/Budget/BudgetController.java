@@ -27,9 +27,10 @@ public class BudgetController {
         return budgetService.getAllBudgets();
     }
 
-    @PostMapping
-    public Budget createBudget(@RequestBody Budget budget) {
-        return budgetService.createBudget(budget);
+    @PostMapping(path = "{user_id}")
+    public void createBudget(@RequestBody Budget budget, @PathVariable Long user_id) {
+        Optional<User> findUser = userService.findUserById(user_id);
+        findUser.ifPresent(user -> budgetService.createBudget(budget, user));
     }
 
     @PutMapping("/{id}")

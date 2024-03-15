@@ -1,5 +1,6 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.Budget;
 import com.ubb.raiffeisen.raiffeisenbackendproject.User.User;
+import com.ubb.raiffeisen.raiffeisenbackendproject.User.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,13 @@ public class BudgetService {
         return budgetRepository.findAll();
     }
 
-    public Budget createBudget(Budget budget) {
-        return budgetRepository.save(budget);
+    public void createBudget(Budget budget, User existingUser) {
+        budget.setUser(existingUser);
+         budgetRepository.save(budget);
     }
 
     public List<Budget> findBudgetsInDateRange(LocalDate startDate, LocalDate endDate) {
-        return budgetRepository.findByStartDateAfterAndEndDateBefore(startDate, endDate);
+        return budgetRepository.findAllByStartDateAndEndDate(startDate, endDate);
     }
 
     public Budget updateBudget(Long id, Budget newBudgetData) {
