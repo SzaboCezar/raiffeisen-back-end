@@ -1,7 +1,8 @@
 package com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard;
 import com.ubb.raiffeisen.raiffeisenbackendproject.User.User;
-import com.ubb.raiffeisen.raiffeisenbackendproject.User.UserJpaRepository;
 import com.ubb.raiffeisen.raiffeisenbackendproject.User.UserNotFoundException;
+import com.ubb.raiffeisen.raiffeisenbackendproject.User.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,18 +13,12 @@ import java.util.Optional;
  */
 @RestController
 public class CreditCardController {
-    private CreditCardJpaRepository cardJpaRepository;
-    private UserJpaRepository userJpaRepository;
+    private final CreditCardService cardService;
+    private final UserService userService;
 
-    /**
-     * Constructs a new CreditCardController with the specified repositories.
-     *
-     * @param cardJpaRepository The repository for credit card entities.
-     * @param userJpaRepository The repository for user entities.
-     */
-    public CreditCardController(CreditCardJpaRepository cardJpaRepository, UserJpaRepository userJpaRepository) {
-        this.cardJpaRepository = cardJpaRepository;
-        this.userJpaRepository = userJpaRepository;
+    public CreditCardController(CreditCardService cardService, UserService userService) {
+        this.cardService = cardService;
+        this.userService = userService;
     }
 
     /**
@@ -33,7 +28,7 @@ public class CreditCardController {
      */
     @GetMapping(path = "/credit-cards")
     public List<CreditCard> getCreditCardList(){
-           return cardJpaRepository.findAll();
+           return cardService.getCreditCardList();
     }
 
     /**
@@ -44,10 +39,10 @@ public class CreditCardController {
      * @throws CardNotFoundException If no credit card with the specified ID exists.
      */
     @GetMapping(path = "/credit-card/{cardId}")
-    public Optional<CreditCard> findById(@PathVariable Long cardId){
-        Optional<CreditCard> creditCard = cardJpaRepository.findById(cardId);
+    public ResponseEntity<Optional<CreditCard>> findById(@PathVariable Long cardId){
+        Optional<CreditCard> creditCard = cardService.findCreditCardById(cardId);
         if(creditCard.isEmpty()) throw new CardNotFoundException("Credit Card with id: " + cardId + " does not exist!");
-        return creditCard;
+        return ResponseEntity.ok(creditCard);
     }
 
     /**
@@ -60,16 +55,15 @@ public class CreditCardController {
      */
     @PostMapping(path = "/user/{user_id}/credit-card")
     private CreditCard createCreditCardForUser(@PathVariable Long user_id, @RequestBody CreditCard creditCard){
-        Optional<User> findUser = userJpaRepository.findById(user_id);
+        Optional<User> findUser = userService.findUserById(user_id);
         if (findUser.isEmpty()) throw new UserNotFoundException("User with id: " + user_id + " does not exist!");
 
         creditCard.setUser(findUser.get());
         User checkUser = findUser.get();
         checkUser.setCreditCard(creditCard);
 
-        return cardJpaRepository.save(creditCard);
+        return cardService.createCreditCardForUser(creditCard);
     }
-
 
     /**
      * Deletes the credit card with the specified ID.
@@ -78,8 +72,6 @@ public class CreditCardController {
      */
     @PostMapping(path = "/credit-card/delete{id}")
     public void deleteById(@PathVariable Long id){
-        cardJpaRepository.deleteById(id);
+        cardService.deleteCreditById(id);
     }
-
-
 }

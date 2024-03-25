@@ -22,6 +22,7 @@ public class CreditCard {
     private String CVV;
     private Long amount;
     private Integer points;
+    private String IBAN;
     @OneToOne
     private User user;
 }
