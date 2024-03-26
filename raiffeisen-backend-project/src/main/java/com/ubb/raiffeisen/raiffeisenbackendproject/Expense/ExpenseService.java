@@ -7,6 +7,7 @@ import com.ubb.raiffeisen.raiffeisenbackendproject.CreditCard.CreditCardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class ExpenseService {
         expense.setCreditCard(findCreditCard.get());
         updateAmount.setAmount((long) (updateAmount.getAmount() - expense.getAmount()));
         cardJpaRepository.save(updateAmount);
+        expense.setDate(LocalDate.now());
         return expenseJpaRepository.save(expense);
     }
 
